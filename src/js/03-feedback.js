@@ -43,7 +43,7 @@ function onFormSubmit(event) {
     } else {
         event.preventDefault();
         event.currentTarget.reset();
-        localStorage.clear('feedback-form-state');
+        localStorage.removeItem(STORAGE_KEY);
         console.log(formData);
     }
 };
