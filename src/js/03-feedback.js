@@ -29,9 +29,9 @@ function savedMessage() {
     if (parseForm) {
         const objectKeys = Object.entries(parseForm);
         
-        objectKeys.forEach(([key, value]) => {
+        objectKeys.forEach(([keys, values]) => {
 
-            form.elements[key].value = value;
+            form.elements[keys].value = values;
         });
     };
 };
