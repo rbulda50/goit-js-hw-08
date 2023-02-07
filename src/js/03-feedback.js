@@ -2,48 +2,49 @@ import throttle from "lodash.throttle";
 
 const STORAGE_KEY = 'feedback-form-state';
 
-const formData = {};
+const savedData = localStorage.getItem(STORAGE_KEY);
+const parsedData = JSON.parse(savedData);
+// console.log(parsedData);
+
+const formData = {...parsedData};
 
 const form = document.querySelector('.feedback-form');
+savedMessage();
+
 
 form.addEventListener('submit', onFormSubmit);
 form.addEventListener('input', throttle(onFormInput, 500));
 
-savedFormMessage();
-
-
-function onFormSubmit(event) {
-    event.preventDefault();
-
-    // console.log('Відправляємо форму');
-    event.currentTarget.reset();
-    console.log(formData);
-    localStorage.removeItem(STORAGE_KEY);
-};
-
-
 function onFormInput(event) {
 
     formData[event.target.name] = event.target.value;
-    const savedData = JSON.stringify(({ formData }));
-    localStorage.setItem(STORAGE_KEY, savedData);
+
+    const parsedData = JSON.stringify(formData);
+    localStorage.setItem(STORAGE_KEY, parsedData);
 };
 
-function savedFormMessage(event) {
-    const savedMessage = localStorage.getItem(STORAGE_KEY);
-    const parsedMessage = JSON.parse(savedMessage);
+function savedMessage() {
+    const parseForm = parsedData;
 
-    // console.log(parsedMessage.formData.email);
-    // console.log(parsedMessage.formData.message);
-
-    if (savedMessage) {
-        form.elements.email.value = parsedMessage.formData.email;
-        // console.log(form.elements.email.value);
-        form.message.value = parsedMessage.formData.message;
-        // console.log(form.message.value);
+    if (parseForm) {
+        const objectKeys = Object.entries(parseForm);
+        
+        objectKeys.forEach(([key, value]) => {
+            // console.log(key);
+            // console.log(value);
+            form.elements[key].value = value;
+        });
     };
 };
 
+function onFormSubmit(event) {
 
-
-
+    if (form.elements.email.value === '' || form.elements.message.value === '') {
+        alert('Заповніть усі поля вводу!')
+    } else {
+        event.preventDefault();
+        event.currentTarget.reset();
+        localStorage.clear('feedback-form-state');
+        console.log(formData);
+    }
+};

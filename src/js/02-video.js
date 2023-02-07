@@ -19,7 +19,9 @@ function onSaveCurrentTime(event) {
 
 function onFinishedTime() {
     const savedTime = localStorage.getItem(CURRENT_TIME);
-    player.setCurrentTime(savedTime);
-    localStorage.removeItem(CURRENT_TIME);
+    if (savedTime) {
+        player.setCurrentTime(savedTime);
+        localStorage.removeItem(CURRENT_TIME);
+    };
 };
 
