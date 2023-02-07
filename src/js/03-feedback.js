@@ -30,8 +30,7 @@ function savedMessage() {
         const objectKeys = Object.entries(parseForm);
         
         objectKeys.forEach(([key, value]) => {
-            // console.log(key);
-            // console.log(value);
+
             form.elements[key].value = value;
         });
     };
