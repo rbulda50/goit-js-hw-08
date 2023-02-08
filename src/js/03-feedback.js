@@ -1,6 +1,6 @@
 const STORAGE_KEY = "feedback-form-state";
 
-const formData = {};
+let formData = {};
 const form = document.querySelector('.feedback-form');
 
 
@@ -36,8 +36,14 @@ function savedMessage() {
 
 
 function onSubmitForm(event) {
-    event.preventDefault();
-    event.currentTarget.reset();
-    localStorage.removeItem(STORAGE_KEY);
-    console.log(formData);
+
+    if (form.elements.email.value === '' || form.elements.message.value === '') {
+        alert("Потрібно заповнити всі поля вводу!");
+    } else {
+        event.preventDefault();
+        event.currentTarget.reset();
+        localStorage.removeItem(STORAGE_KEY);
+        console.log(formData);
+        formData = {};
+    };
 };
