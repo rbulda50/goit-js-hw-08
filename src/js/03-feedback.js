@@ -1,49 +1,43 @@
-import throttle from "lodash.throttle";
+const STORAGE_KEY = "feedback-form-state";
 
-const STORAGE_KEY = 'feedback-form-state';
-
-const savedData = localStorage.getItem(STORAGE_KEY);
-const parsedData = JSON.parse(savedData);
-// console.log(parsedData);
-
-const formData = {...parsedData};
-
+const formData = {};
 const form = document.querySelector('.feedback-form');
+
+
 savedMessage();
 
+form.addEventListener('input', onFormInput);
+form.addEventListener('submit', onSubmitForm);
 
-form.addEventListener('submit', onFormSubmit);
-form.addEventListener('input', throttle(onFormInput, 500));
 
 function onFormInput(event) {
-
+    // console.log(event.target.value);
     formData[event.target.name] = event.target.value;
 
-    const parsedData = JSON.stringify(formData);
-    localStorage.setItem(STORAGE_KEY, parsedData);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
 };
 
+
 function savedMessage() {
-    const parseForm = parsedData;
+    const savedMessage = localStorage.getItem(STORAGE_KEY);
 
-    if (parseForm) {
-        const objectKeys = Object.entries(parseForm);
-        
-        objectKeys.forEach(([keys, values]) => {
+    if (savedMessage) {
 
-            form.elements[keys].value = values;
-        });
+        const parsedData = JSON.parse(savedMessage);
+        // console.log(parsedData);
+
+        Object.entries(parsedData).forEach(([name, value]) => {
+            form.elements[name].value = value;
+
+            formData[name] = value;
+        });  
     };
 };
 
-function onFormSubmit(event) {
 
-    if (form.elements.email.value === '' || form.elements.message.value === '') {
-        alert('Заповніть усі поля вводу!')
-    } else {
-        event.preventDefault();
-        event.currentTarget.reset();
-        localStorage.removeItem(STORAGE_KEY);
-        console.log(formData);
-    }
+function onSubmitForm(event) {
+    event.preventDefault();
+    event.currentTarget.reset();
+    localStorage.removeItem(STORAGE_KEY);
+    console.log(formData);
 };
